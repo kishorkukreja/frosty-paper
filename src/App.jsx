@@ -1,5 +1,5 @@
 import React from "react";
-import { Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 import { theme, GlobalStyle } from "./theme";
 import Header from "./components/Header";
@@ -25,12 +25,12 @@ const MainContent = styled.main`
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <AppContainer>
-        <Header />
-        <MainContent>
-          <Router basename="/forsty-paper">
+    <Router>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <AppContainer>
+          <Header />
+          <MainContent>
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/services" element={<ServicesPage />} />
@@ -43,12 +43,12 @@ function App() {
               />
               <Route path="/pilot-program" element={<PilotProgramPage />} />
             </Routes>
-          </Router>
-        </MainContent>
-        <NewsletterSignup />
-        <Footer />
-      </AppContainer>
-    </ThemeProvider>
+          </MainContent>
+          <NewsletterSignup />
+          <Footer />
+        </AppContainer>
+      </ThemeProvider>
+    </Router>
   );
 }
 
