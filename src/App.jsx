@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 import { theme, GlobalStyle } from "./theme";
@@ -12,6 +12,7 @@ import ContactPage from "./pages/ContactPage";
 import DiagnosticReportPage from "./pages/DiagnosticReportPage";
 import PilotProgramPage from "./pages/PilotProgramPage";
 import NewsletterSignup from "./components/NewsletterSignup";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const AppContainer = styled.div`
   display: flex;
@@ -25,30 +26,34 @@ const MainContent = styled.main`
 
 function App() {
   return (
-    <Router>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <AppContainer>
-          <Header />
-          <MainContent>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/why-choose-us" element={<WhyChooseUsPage />} />
-              <Route path="/case-studies" element={<CaseStudiesPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route
-                path="/diagnostic-report"
-                element={<DiagnosticReportPage />}
-              />
-              <Route path="/pilot-program" element={<PilotProgramPage />} />
-            </Routes>
-          </MainContent>
-          <NewsletterSignup />
-          <Footer />
-        </AppContainer>
-      </ThemeProvider>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <AppContainer>
+            <Header />
+            <MainContent>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/services" element={<ServicesPage />} />
+                  <Route path="/why-choose-us" element={<WhyChooseUsPage />} />
+                  <Route path="/case-studies" element={<CaseStudiesPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route
+                    path="/diagnostic-report"
+                    element={<DiagnosticReportPage />}
+                  />
+                  <Route path="/pilot-program" element={<PilotProgramPage />} />
+                </Routes>
+              </Suspense>
+            </MainContent>
+            <NewsletterSignup />
+            <Footer />
+          </AppContainer>
+        </ThemeProvider>
+      </Router>
+    </ErrorBoundary>
   );
 }
 
