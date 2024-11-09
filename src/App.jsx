@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Router, Routes, Route } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 import { theme, GlobalStyle } from "./theme";
 import Header from "./components/Header";
@@ -30,18 +30,20 @@ function App() {
       <AppContainer>
         <Header />
         <MainContent>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/why-choose-us" element={<WhyChooseUsPage />} />
-            <Route path="/case-studies" element={<CaseStudiesPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route
-              path="/diagnostic-report"
-              element={<DiagnosticReportPage />}
-            />
-            <Route path="/pilot-program" element={<PilotProgramPage />} />
-          </Routes>
+          <Router basename="/forsty-paper">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/why-choose-us" element={<WhyChooseUsPage />} />
+              <Route path="/case-studies" element={<CaseStudiesPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route
+                path="/diagnostic-report"
+                element={<DiagnosticReportPage />}
+              />
+              <Route path="/pilot-program" element={<PilotProgramPage />} />
+            </Routes>
+          </Router>
         </MainContent>
         <NewsletterSignup />
         <Footer />
