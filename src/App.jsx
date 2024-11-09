@@ -8,13 +8,15 @@ import NewsletterSignup from "./components/NewsletterSignup";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 // Lazy load all pages
-const HomePage = lazy(() => import("./pages/HomePage"));
-const ServicesPage = lazy(() => import("./pages/ServicesPage"));
-const WhyChooseUsPage = lazy(() => import("./pages/WhyChooseUsPage"));
-const CaseStudiesPage = lazy(() => import("./pages/CaseStudiesPage"));
-const ContactPage = lazy(() => import("./pages/ContactPage"));
-const DiagnosticReportPage = lazy(() => import("./pages/DiagnosticReportPage"));
-const PilotProgramPage = lazy(() => import("./pages/PilotProgramPage"));
+// const HomePage = lazy(() => import("./pages/HomePage"));
+// const ServicesPage = lazy(() => import("./pages/ServicesPage"));
+// const WhyChooseUsPage = lazy(() => import("./pages/WhyChooseUsPage"));
+// const CaseStudiesPage = lazy(() => import("./pages/CaseStudiesPage"));
+// const ContactPage = lazy(() => import("./pages/ContactPage"));
+// const DiagnosticReportPage = lazy(() => import("./pages/DiagnosticReportPage"));
+// const PilotProgramPage = lazy(() => import("./pages/PilotProgramPage"));
+
+import HomePage from "./pages/HomePage"; // Just import HomePage for now
 
 const AppContainer = styled.div`
   display: flex;
@@ -26,6 +28,39 @@ const MainContent = styled.main`
   flex: 1;
 `;
 
+// function App() {
+//   return (
+//     <ErrorBoundary>
+//       <Router>
+//         <ThemeProvider theme={theme}>
+//           <GlobalStyle />
+//           <AppContainer>
+//             <Header />
+//             <MainContent>
+//               <Suspense fallback={<div>Loading...</div>}>
+//                 <Routes>
+//                   <Route path="/" element={<HomePage />} />
+//                   <Route path="/services" element={<ServicesPage />} />
+//                   <Route path="/why-choose-us" element={<WhyChooseUsPage />} />
+//                   <Route path="/case-studies" element={<CaseStudiesPage />} />
+//                   <Route path="/contact" element={<ContactPage />} />
+//                   <Route
+//                     path="/diagnostic-report"
+//                     element={<DiagnosticReportPage />}
+//                   />
+//                   <Route path="/pilot-program" element={<PilotProgramPage />} />
+//                 </Routes>
+//               </Suspense>
+//             </MainContent>
+//             <NewsletterSignup />
+//             <Footer />
+//           </AppContainer>
+//         </ThemeProvider>
+//       </Router>
+//     </ErrorBoundary>
+//   );
+// }
+
 function App() {
   return (
     <ErrorBoundary>
@@ -35,20 +70,9 @@ function App() {
           <AppContainer>
             <Header />
             <MainContent>
-              <Suspense fallback={<div>Loading...</div>}>
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/services" element={<ServicesPage />} />
-                  <Route path="/why-choose-us" element={<WhyChooseUsPage />} />
-                  <Route path="/case-studies" element={<CaseStudiesPage />} />
-                  <Route path="/contact" element={<ContactPage />} />
-                  <Route
-                    path="/diagnostic-report"
-                    element={<DiagnosticReportPage />}
-                  />
-                  <Route path="/pilot-program" element={<PilotProgramPage />} />
-                </Routes>
-              </Suspense>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+              </Routes>
             </MainContent>
             <NewsletterSignup />
             <Footer />
