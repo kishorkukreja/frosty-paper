@@ -248,11 +248,31 @@ const BenefitCard = styled.div`
 `;
 
 function WhyChooseUsPage() {
-  const stats = [
-    { number: "500+", label: "Clients Served" },
-    { number: "30%", label: "Average Cost Reduction" },
-    { number: "99%", label: "Client Satisfaction" },
-    { number: "24/7", label: "Support Available" },
+  const statistics = [
+    {
+      number: "40%",
+      label: "Average Carbon Footprint Reduction Potential",
+    },
+    {
+      number: "60%",
+      label: "Risk Mitigation Improvement Opportunity",
+    },
+    {
+      number: "15+",
+      label: "Years of Sustainable Supply Chain Expertise",
+    },
+    {
+      number: "3-4x",
+      label: "Typical Return on Resilience Investment",
+    },
+    {
+      number: "30%",
+      label: "Average Cost Savings from Sustainable Practices",
+    },
+    {
+      number: "24/7",
+      label: "ESG-Focused Support",
+    },
   ];
 
   const reasons = [

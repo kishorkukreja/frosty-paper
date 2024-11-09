@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import NewsletterSignup from "./components/NewsletterSignup";
 import ErrorBoundary from "./components/ErrorBoundary";
+import ScrollToTop from "./components/ScrollToTop"; // Add this import
 
 // Import all pages normally since we removed the Router from main.jsx
 import HomePage from "./pages/HomePage";
@@ -15,6 +16,8 @@ import CaseStudiesPage from "./pages/CaseStudiesPage";
 import ContactPage from "./pages/ContactPage";
 import DiagnosticReportPage from "./pages/DiagnosticReportPage";
 import PilotProgramPage from "./pages/PilotProgramPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import ScrollToTopButton from "./components/ScrollToTopButton";
 
 const AppContainer = styled.div`
   display: flex;
@@ -30,6 +33,7 @@ function App() {
   return (
     <ErrorBoundary>
       <Router>
+        <ScrollToTop />
         <ThemeProvider theme={theme}>
           <GlobalStyle />
           <AppContainer>
@@ -46,10 +50,12 @@ function App() {
                   element={<DiagnosticReportPage />}
                 />
                 <Route path="/pilot-program" element={<PilotProgramPage />} />
+                <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </MainContent>
-            <NewsletterSignup />
+            {/* <NewsletterSignup /> */}
             <Footer />
+            <ScrollToTopButton />
           </AppContainer>
         </ThemeProvider>
       </Router>
