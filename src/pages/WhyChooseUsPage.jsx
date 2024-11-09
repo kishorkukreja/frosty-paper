@@ -248,7 +248,7 @@ const BenefitCard = styled.div`
 `;
 
 function WhyChooseUsPage() {
-  const statistics = [
+  const stats = [
     {
       number: "40%",
       label: "Average Carbon Footprint Reduction Potential",
