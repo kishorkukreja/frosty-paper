@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ChevronRight, ArrowRight } from "lucide-react";
 import { Sparkles } from "lucide-react";
+import { Download } from "lucide-react";
 
 const HomeContainer = styled.div`
   max-width: 1200px;
@@ -730,6 +731,10 @@ function HomePage() {
             <CTAButton to="/services" $secondary>
               Explore Services
               <ChevronRight size={18} />
+            </CTAButton>
+            <CTAButton to="/resources" $secondary>
+              Download Free Resources
+              <Download size={18} />
             </CTAButton>
           </ButtonGroup>
         </HeroContent>

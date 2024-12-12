@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
   BarChart2,
@@ -10,6 +10,13 @@ import {
   CheckCircle,
   TrendingUp,
   Zap,
+} from "lucide-react";
+import {
+  Leaf,
+  AlertCircle,
+  RefreshCcw,
+  LineChart,
+  BadgeCheck,
 } from "lucide-react";
 
 const WhyChooseUsContainer = styled.div`
@@ -314,6 +321,42 @@ function WhyChooseUsPage() {
       title: "Fast Implementation",
       description:
         "Quick deployment of solutions with minimal disruption to operations.",
+    },
+    {
+      icon: Leaf,
+      title: "Green Supply Chain Design",
+      description:
+        "Optimize your network for both environmental impact and operational efficiency.",
+    },
+    {
+      icon: AlertCircle,
+      title: "Risk Assessment & Mitigation",
+      description:
+        "Comprehensive analysis of supply chain vulnerabilities and resilience strategies.",
+    },
+    {
+      icon: BadgeCheck,
+      title: "ESG Compliance",
+      description:
+        "Navigate and exceed environmental, social, and governance requirements.",
+    },
+    {
+      icon: RefreshCcw,
+      title: "Circular Economy Solutions",
+      description:
+        "Transform linear supply chains into circular, sustainable systems.",
+    },
+    {
+      icon: LineChart,
+      title: "Performance Tracking",
+      description:
+        "Monitor and measure sustainability metrics and operational improvements.",
+    },
+    {
+      icon: Award,
+      title: "Industry Best Practices",
+      description:
+        "Implement proven sustainable and resilient supply chain strategies.",
     },
   ];
 

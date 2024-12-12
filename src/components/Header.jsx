@@ -271,6 +271,10 @@ function Header() {
           <NavLink to="/services" active={isActive("/services")}>
             Services
           </NavLink>
+          <NavLink to="/resources" active={isActive("/resources")}>
+            Resources
+          </NavLink>
+
           <NavLink to="/why-choose-us" active={isActive("/why-choose-us")}>
             Why Us
           </NavLink>

@@ -9,11 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-label": "^2.1.0",
+    "@supabase/supabase-js": "^2.47.6",
+    "clsx": "^2.1.1",
     "lucide-react": "0.454.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.1",
-    "styled-components": "^5.3.11"
+    "styled-components": "^5.3.11",
+    "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

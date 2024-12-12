@@ -19,6 +19,8 @@ import PilotProgramPage from "./pages/PilotProgramPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 
+import ResourcesPage from "./pages/ResourcesPage";
+
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -45,6 +47,8 @@ function App() {
                 <Route path="/why-choose-us" element={<WhyChooseUsPage />} />
                 <Route path="/case-studies" element={<CaseStudiesPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/resources" element={<ResourcesPage />} />
+                {/* Add this line */}
                 <Route
                   path="/diagnostic-report"
                   element={<DiagnosticReportPage />}
