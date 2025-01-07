@@ -1,237 +1,3 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Phone, Mail, MapPin, Send, CheckCircle, Loader } from "lucide-react";
-import { toast } from "react-hot-toast";
-import { supabase } from "../lib/supabaseClient";
-
-const ContactContainer = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  padding-top: calc(72px + 2rem);
-`;
-
-const Header = styled.div`
-  text-align: center;
-  margin-bottom: 4rem;
-`;
-
-const Title = styled.h1`
-  font-size: 3rem;
-  background: linear-gradient(
-    135deg,
-    ${(props) => props.theme.colors.primary},
-    ${(props) => props.theme.colors.secondary}
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: 1rem;
-`;
-
-const Description = styled.p`
-  color: ${(props) => props.theme.colors.lightText};
-  font-size: 1.2rem;
-  max-width: 600px;
-  margin: 0 auto;
-`;
-
-const ContentWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 4rem;
-  background: white;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-
-  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const ContactInfo = styled.div`
-  padding: 3rem;
-  background: linear-gradient(
-    135deg,
-    ${(props) => props.theme.colors.primary},
-    ${(props) => props.theme.colors.secondary}
-  );
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const InfoHeader = styled.h2`
-  font-size: 1.8rem;
-  margin-bottom: 2rem;
-  color: #ffffff; /* Explicit white color */
-  font-weight: 600;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  color: black;
-`;
-
-const InfoList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  color: black;
-`;
-
-const InfoItem = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  color: black; /* Explicit white color */
-  transition: all 0.3s ease;
-  font-size: 1rem;
-  line-height: 1.5;
-
-  &:hover {
-    transform: translateX(10px);
-  }
-
-  svg {
-    width: 20px;
-    height: 20px;
-    stroke-width: 2px;
-    flex-shrink: 0;
-    margin-top: 3px;
-  }
-`;
-
-const SocialLinks = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-top: auto;
-`;
-
-const SocialLink = styled.a`
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff; /* Explicit white color */
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-3px);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-`;
-
-const FormSection = styled.div`
-  padding: 3rem;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-`;
-
-const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const Input = styled.input`
-  padding: 0.875rem 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background: #ffffff;
-
-  &:focus {
-    outline: none;
-    border-color: ${(props) => props.theme.colors.secondary};
-    box-shadow: 0 0 0 3px ${(props) => `${props.theme.colors.secondary}20`};
-  }
-
-  &::placeholder {
-    color: #9ca3af;
-  }
-`;
-
-const TextArea = styled.textarea`
-  padding: 0.875rem 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  font-size: 1rem;
-  resize: vertical;
-  min-height: 120px;
-  transition: all 0.3s ease;
-  background: #ffffff;
-  font-family: inherit;
-
-  &:focus {
-    outline: none;
-    border-color: ${(props) => props.theme.colors.secondary};
-    box-shadow: 0 0 0 3px ${(props) => `${props.theme.colors.secondary}20`};
-  }
-
-  &::placeholder {
-    color: #9ca3af;
-  }
-`;
-
-const Label = styled.label`
-  color: ${(props) => props.theme.colors.primary};
-  font-size: 0.95rem;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-`;
-
-const SubmitButton = styled.button`
-  background: ${(props) =>
-    props.theme.colors.secondary}; /* Single color instead of gradient */
-  color: black;
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  &:hover {
-    background: ${(props) =>
-      props.theme.colors.secondary}ee; /* Slightly lighter on hover */
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px ${(props) => `${props.theme.colors.secondary}40`};
-  }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px ${(props) => `${props.theme.colors.secondary}40`};
-  }
-
-  &:disabled {
-    background: ${(props) => props.theme.colors.secondary}80;
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-
-  svg {
-    width: 18px;
-    height: 18px;
-  }
-`;
 const SuccessMessage = styled.div`
   display: flex;
   align-items: center;
@@ -245,7 +11,7 @@ const SuccessMessage = styled.div`
 
 function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -295,6 +61,7 @@ function ContactPage() {
     if (!validateForm()) return;
 
     setIsSubmitting(true);
+    setIsSuccess(false); // Reset success state before submitting
 
     try {
       // Insert into Supabase
@@ -345,6 +112,11 @@ function ContactPage() {
         { duration: 5000 }
       );
 
+      setIsSuccess(true);
+      toast.success(
+        "Thank you for your inquiry! We'll get back to you within 24 hours."
+      );
+
       // Reset form after success
       setFormData({
         name: "",
@@ -355,6 +127,7 @@ function ContactPage() {
       });
     } catch (error) {
       console.error("Error submitting form:", error.message || error);
+      setIsSuccess(false); // Ensure success is false on error
       toast.error(
         "Something went wrong. Please try again or contact us directly.",
         { duration: 5000 }
@@ -478,6 +251,12 @@ function ContactPage() {
                 </>
               )}
             </SubmitButton>
+            {isSuccess && (
+              <SuccessMessage>
+                <CheckCircle />
+                Your message has been sent successfully!
+              </SuccessMessage>
+            )}
           </Form>
         </FormSection>
       </ContentWrapper>
