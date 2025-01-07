@@ -3,6 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { Link2, Menu, X, ChevronRight } from "lucide-react";
 
+/* ====== Styled Components ====== */
+
 const HeaderContainer = styled.header`
   background: ${(props) =>
     props.scrolled
@@ -20,10 +22,6 @@ const HeaderContainer = styled.header`
       ? "0 4px 20px rgba(0, 0, 0, 0.08)"
       : "0 2px 10px rgba(0, 0, 0, 0.02)"};
   transition: all 0.3s ease;
-
-  @media (min-width: ${(props) => props.theme.breakpoints.tablet}) {
-    padding: ${(props) => (props.scrolled ? "0.75rem 2rem" : "1.25rem 2rem")};
-  }
 `;
 
 const Nav = styled.nav`
@@ -51,38 +49,39 @@ const Logo = styled(Link)`
   }
 `;
 
-const NavLinks = styled.div`
+/* Desktop Menu */
+const DesktopNavLinks = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
   align-items: center;
 
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    display: ${(props) => (props.isOpen ? "flex" : "none")};
-    flex-direction: column;
-    position: fixed;
-    top: 72px; /* Adjust based on your header height */
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 1.5rem;
-    gap: 1rem;
-    border-radius: 0 0 12px 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    z-index: 1001;
-    overflow-y: auto;
-    max-height: calc(100vh - 72px);
-    animation: slideDown 0.3s ease-out forwards;
+    display: none;
+  }
+`;
 
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+/* Mobile Menu */
+const MobileNavLinks = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  transform: ${(props) =>
+    props.isOpen ? "translateX(0)" : "translateX(100%)"};
+  transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
+
+  @media (min-width: ${(props) => props.theme.breakpoints.tablet}) {
+    display: none;
   }
 `;
 
@@ -92,19 +91,10 @@ const NavLink = styled(Link)`
   font-weight: ${(props) => (props.active ? "600" : "500")};
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
 
   &:hover {
     background: ${(props) => `${props.theme.colors.secondary}10`};
-  }
-
-  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    width: 100%;
-    text-align: center;
-    padding: 0.75rem;
-    border: 1px solid
-      ${(props) =>
-        props.active ? props.theme.colors.secondary : "transparent"};
   }
 `;
 
@@ -138,12 +128,12 @@ const ActionButton = styled(Link)`
   text-decoration: none;
   font-size: 0.95rem;
 
-  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    width: 100%;
-    text-align: center;
-    padding: 0.75rem 1.5rem;
+  &:hover {
+    background: ${(props) => props.theme.colors.secondary};
   }
 `;
+
+/* ====== Header Component ====== */
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -153,7 +143,6 @@ function Header() {
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -166,17 +155,14 @@ function Header() {
   return (
     <HeaderContainer scrolled={scrolled}>
       <Nav>
+        {/* Logo */}
         <Logo to="/">
           <Link2 size={32} />
           Supply Chain Consulting
         </Logo>
-        <MobileMenuButton
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </MobileMenuButton>
-        <NavLinks isOpen={isMenuOpen}>
+
+        {/* Desktop Menu */}
+        <DesktopNavLinks>
           <NavLink to="/services" active={isActive("/services")}>
             Services
           </NavLink>
@@ -196,7 +182,27 @@ function Header() {
             Get Started
             <ChevronRight size={16} />
           </ActionButton>
-        </NavLinks>
+        </DesktopNavLinks>
+
+        {/* Mobile Menu Button */}
+        <MobileMenuButton
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </MobileMenuButton>
+
+        {/* Mobile Menu */}
+        <MobileNavLinks isOpen={isMenuOpen}>
+          <NavLink to="/services">Services</NavLink>
+          <NavLink to="/resources">Resources</NavLink>
+          <NavLink to="/why-choose-us">Why Us</NavLink>
+          <NavLink to="/case-studies">Case Studies</NavLink>
+          <NavLink to="/contact">Contact</NavLink>
+          <ActionButton to="/get-started">
+            Get Started <ChevronRight size={16} />
+          </ActionButton>
+        </MobileNavLinks>
       </Nav>
     </HeaderContainer>
   );
