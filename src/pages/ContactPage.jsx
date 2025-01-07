@@ -313,7 +313,10 @@ function ContactPage() {
 
       // Trigger n8n workflow
       try {
-        const emailRecipients = ["info@mahakaalconsulting.com"];
+        const emailRecipients = [
+          "info@mahakaalconsulting.com",
+          "kishorkukreja76@gmail.com",
+        ];
 
         const enquiryType = ["SupplyChainConsulting"];
 
