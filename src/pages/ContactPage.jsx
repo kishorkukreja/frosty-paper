@@ -312,45 +312,40 @@ function ContactPage() {
       if (error) throw error;
 
       // Trigger n8n workflow
-      try {
-        const emailRecipients = [
-          "info@mahakaalconsulting.com",
-          "kishorkukreja76@gmail.com",
-        ];
+      const emailRecipients = [
+        "info@mahakaalconsulting.com",
+        "kishorkukreja76@gmail.com",
+      ];
+      const enquiryType = ["SupplyChainConsulting"];
 
-        const enquiryType = ["SupplyChainConsulting"];
-
-        const n8nResponse = await fetch(
-          "https://mahakaal.app.n8n.cloud/webhook/96d7aabe-7e30-44e2-8297-3e405254b7d5",
-          {
-            method: "POST",
-            headers: {
-              Authorization: "Basic " + btoa("admin:admin123"),
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              ...formData,
-              emailRecipients,
-              enquiryType,
-            }),
-          }
-        );
-
-        if (!n8nResponse.ok) {
-          console.error("n8n workflow failed:", await n8nResponse.text());
-        }
-      } catch (n8nError) {
-        console.error("Error calling n8n workflow:", n8nError);
-      }
-
-      toast.success(
-        "Thank you for your inquiry! We'll get back to you within 24 hours.",
+      const n8nResponse = await fetch(
+        "https://mahakaal.app.n8n.cloud/webhook/96d7aabe-7e30-44e2-8297-3e405254b7d5",
         {
-          duration: 5000,
+          method: "POST",
+          headers: {
+            Authorization: "Basic " + btoa("admin:admin123"),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            emailRecipients,
+            enquiryType,
+          }),
         }
       );
 
-      // Clear form
+      if (!n8nResponse.ok) {
+        console.error("n8n workflow failed:", await n8nResponse.text());
+        throw new Error("n8n workflow failed");
+      }
+
+      // ✅ If Both Succeed
+      toast.success(
+        "Thank you for your inquiry! We'll get back to you within 24 hours.",
+        { duration: 5000 }
+      );
+
+      // Reset form after success
       setFormData({
         name: "",
         email: "",
@@ -359,12 +354,10 @@ function ContactPage() {
         message: "",
       });
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error submitting form:", error.message || error);
       toast.error(
         "Something went wrong. Please try again or contact us directly.",
-        {
-          duration: 5000,
-        }
+        { duration: 5000 }
       );
     } finally {
       setIsSubmitting(false);
