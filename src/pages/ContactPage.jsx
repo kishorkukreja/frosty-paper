@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Phone, Mail, MapPin, Send, CheckCircle, Loader } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { supabase } from "../lib/supabaseClient";
 
 const ContactContainer = styled.div`
   max-width: 1200px;
@@ -243,17 +245,127 @@ const SuccessMessage = styled.div`
 
 function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const validateForm = () => {
+    if (!formData.name.trim()) {
+      toast.error("Please enter your name");
+      return false;
+    }
+    if (
+      !formData.email.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+    ) {
+      toast.error("Please enter a valid email address");
+      return false;
+    }
+    if (!formData.phone.trim() || !/^[0-9+\-\s()]{10,}$/.test(formData.phone)) {
+      toast.error("Please enter a valid phone number");
+      return false;
+    }
+    if (!formData.company.trim()) {
+      toast.error("Please enter your company name");
+      return false;
+    }
+    if (!formData.message.trim()) {
+      toast.error("Please enter your message");
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      // Insert into Supabase
+      const { error } = await supabase.from("enquiries_supply_chain").insert([
+        {
+          name: formData.name,
+          email_id: formData.email,
+          phone_number: formData.phone,
+          company: formData.company,
+          message: formData.message,
+          created_at: new Date().toISOString(),
+        },
+      ]);
 
-    setIsSubmitting(false);
-    setIsSuccess(true);
+      if (error) throw error;
+
+      // Trigger n8n workflow
+      try {
+        const emailRecipients = ["info@mahakaalconsulting.com"];
+
+        const enquiryType = ["SupplyChainConsulting"];
+
+        const n8nResponse = await fetch(
+          "https://mahakaal.app.n8n.cloud/webhook-test/96d7aabe-7e30-44e2-8297-3e405254b7d5",
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Basic " + btoa("admin:admin123"),
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...formData,
+              emailRecipients,
+              enquiryType,
+            }),
+          }
+        );
+
+        if (!n8nResponse.ok) {
+          console.error("n8n workflow failed:", await n8nResponse.text());
+        }
+      } catch (n8nError) {
+        console.error("Error calling n8n workflow:", n8nError);
+      }
+
+      toast.success(
+        "Thank you for your inquiry! We'll get back to you within 24 hours.",
+        {
+          duration: 5000,
+        }
+      );
+
+      // Clear form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error(
+        "Something went wrong. Please try again or contact us directly.",
+        {
+          duration: 5000,
+        }
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -279,24 +391,23 @@ function ContactPage() {
                 <Mail />
                 <span>info@mahakaalconsulting.com</span>
               </InfoItem>
-              {/* <InfoItem>
-                <MapPin />
-                <span>
-                  123 Supply Chain St, Business District, City, State 12345
-                </span>
-              </InfoItem> */}
             </InfoList>
           </div>
 
           <SocialLinks>
-            <SocialLink href="#" target="_blank" rel="noopener noreferrer">
+            <SocialLink
+              href="https://linkedin.com/company/mahakaal-consulting"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <i className="fab fa-linkedin"></i>
             </SocialLink>
-            <SocialLink href="#" target="_blank" rel="noopener noreferrer">
+            <SocialLink
+              href="https://twitter.com/mahakaalconsult"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <i className="fab fa-twitter"></i>
-            </SocialLink>
-            <SocialLink href="#" target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-facebook"></i>
             </SocialLink>
           </SocialLinks>
         </ContactInfo>
@@ -305,27 +416,57 @@ function ContactPage() {
           <Form onSubmit={handleSubmit}>
             <InputGroup>
               <Label>Full Name</Label>
-              <Input type="text" required />
+              <Input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
             </InputGroup>
 
             <InputGroup>
               <Label>Email Address</Label>
-              <Input type="email" required />
+              <Input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
             </InputGroup>
 
             <InputGroup>
               <Label>Phone Number</Label>
-              <Input type="tel" required />
+              <Input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+              />
             </InputGroup>
 
             <InputGroup>
               <Label>Company Name</Label>
-              <Input type="text" required />
+              <Input
+                type="text"
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+                required
+              />
             </InputGroup>
 
             <InputGroup>
               <Label>How can we help you?</Label>
-              <TextArea rows="5" required />
+              <TextArea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                rows="5"
+                required
+              />
             </InputGroup>
 
             <SubmitButton type="submit" disabled={isSubmitting}>
@@ -341,13 +482,6 @@ function ContactPage() {
                 </>
               )}
             </SubmitButton>
-
-            {isSuccess && (
-              <SuccessMessage>
-                <CheckCircle />
-                Your message has been sent successfully!
-              </SuccessMessage>
-            )}
           </Form>
         </FormSection>
       </ContentWrapper>

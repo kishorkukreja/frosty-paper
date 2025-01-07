@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "../lib/supabaseClient";
 
 const PageContainer = styled.div`
   max-width: 1200px;
