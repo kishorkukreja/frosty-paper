@@ -318,7 +318,7 @@ function ContactPage() {
         const enquiryType = ["SupplyChainConsulting"];
 
         const n8nResponse = await fetch(
-          "https://mahakaal.app.n8n.cloud/webhook-test/96d7aabe-7e30-44e2-8297-3e405254b7d5",
+          "https://mahakaal.app.n8n.cloud/webhook/96d7aabe-7e30-44e2-8297-3e405254b7d5",
           {
             method: "POST",
             headers: {
