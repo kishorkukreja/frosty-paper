@@ -43,8 +43,7 @@ const Logo = styled(Link)`
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5rem;
-  border-radius: 8px;
+  z-index: 1100;
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     font-size: 1rem;
@@ -60,17 +59,18 @@ const NavLinks = styled.div`
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     display: ${(props) => (props.isOpen ? "flex" : "none")};
     flex-direction: column;
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 72px; /* Adjust based on your header height */
     left: 0;
     right: 0;
     background: white;
-    padding: 1rem;
-    gap: 0.75rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    gap: 1rem;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
     overflow-y: auto;
-    max-height: 80vh;
+    max-height: calc(100vh - 72px);
     animation: slideDown 0.3s ease-out forwards;
 
     @keyframes slideDown {
@@ -116,6 +116,7 @@ const MobileMenuButton = styled.button`
   padding: 0.5rem;
   border-radius: 8px;
   cursor: pointer;
+  z-index: 1100;
 
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     display: flex;
@@ -166,9 +167,15 @@ function Header() {
     <HeaderContainer scrolled={scrolled}>
       <Nav>
         <Logo to="/">
-          <Link2 size={50} />
+          <Link2 size={32} />
           Supply Chain Consulting
         </Logo>
+        <MobileMenuButton
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </MobileMenuButton>
         <NavLinks isOpen={isMenuOpen}>
           <NavLink to="/services" active={isActive("/services")}>
             Services
@@ -190,12 +197,6 @@ function Header() {
             <ChevronRight size={16} />
           </ActionButton>
         </NavLinks>
-        <MobileMenuButton
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </MobileMenuButton>
       </Nav>
     </HeaderContainer>
   );
