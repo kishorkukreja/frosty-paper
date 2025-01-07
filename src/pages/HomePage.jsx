@@ -52,30 +52,27 @@ const HeroContent = styled.div`
 const HeroImage = styled.div`
   flex: 1;
   position: relative;
-  height: 500px;
-  border-radius: 24px;
+  height: 250px; // Mobile height
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 20px 40px ${(props) => `${props.theme.colors.primary}10`};
-  transform: perspective(1000px) rotateY(-5deg);
   transition: transform 0.6s ease;
+  width: 100%;
+  max-width: 100%;
 
-  &:hover {
-    transform: perspective(1000px) rotateY(0deg);
+  @media (min-width: 768px) {
+    height: 400px; // Tablet height
+    border-radius: 20px;
   }
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      135deg,
-      ${(props) => `${props.theme.colors.primary}40`},
-      ${(props) => `${props.theme.colors.secondary}40`}
-    );
-    z-index: 1;
+  @media (min-width: 1024px) {
+    height: 500px; // Desktop height
+    transform: perspective(1000px) rotateY(-5deg);
+    max-width: 600px;
+
+    &:hover {
+      transform: perspective(1000px) rotateY(0deg);
+    }
   }
 
   img {
@@ -83,23 +80,12 @@ const HeroImage = styled.div`
     height: 100%;
     object-fit: cover;
     transition: transform 0.6s ease;
-  }
 
-  &:hover img {
-    transform: scale(1.05);
-  }
-
-  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    width: 100%;
-    max-width: 600px;
-    height: 300px;
-    transform: none;
-    margin: 0 auto;
-  }
-
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    height: 250px;
-    border-radius: 16px;
+    @media (min-width: 1024px) {
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
   }
 `;
 
@@ -431,40 +417,60 @@ const OfferSection = styled.section`
 
 const OfferCard = styled.div`
   display: flex;
-  flex-direction: ${(props) => (props.reverse ? "row-reverse" : "row")};
+  flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   background-color: ${(props) => props.theme.colors.white};
-  border-radius: 20px;
-  padding: 2rem;
+  border-radius: 16px;
+  padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
+
+  @media (min-width: 768px) {
+    flex-direction: ${(props) => (props.reverse ? "row-reverse" : "row")};
+    align-items: stretch;
+    gap: 2rem;
+    padding: 2rem;
+    border-radius: 20px;
+  }
 
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   }
-
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    flex-direction: column;
-    text-align: center;
-    padding: 1.5rem;
-    gap: 1.5rem;
-  }
 `;
 
 const OfferImage = styled.div`
-  width: 200px;
+  width: 100%;
   height: 200px;
-  flex-shrink: 0;
-  border-radius: 15px;
+  border-radius: 12px;
   overflow: hidden;
   position: relative;
+
+  @media (max-width: 768px) {
+    height: 180px;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    width: 40%;
+    min-width: 200px;
+    max-width: 300px;
+    height: 200px;
+    flex-shrink: 0;
+    border-radius: 15px;
+  }
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 
   &::after {
@@ -477,16 +483,18 @@ const OfferImage = styled.div`
       rgba(91, 192, 190, 0.2)
     );
   }
-
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    width: 100%;
-    height: 160px;
-  }
 `;
 
 const OfferContent = styled.div`
   flex: 1;
-  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+  @media (min-width: 768px) {
+    text-align: left;
+    justify-content: space-between;
+  }
 `;
 
 const OfferTitle = styled.h3`
@@ -637,7 +645,7 @@ function HomePage() {
           </OfferContent>
         </OfferCard>
 
-        <OfferCard>
+        <OfferCard reverse>
           <OfferImage>
             <img
               src="https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=2070&auto=format&fit=crop"
