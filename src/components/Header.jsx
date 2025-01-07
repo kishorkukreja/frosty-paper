@@ -8,7 +8,7 @@ const HeaderContainer = styled.header`
     props.scrolled
       ? "rgba(255, 255, 255, 0.98)"
       : "linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%)"};
-  padding: ${(props) => (props.scrolled ? "0.75rem 2rem" : "1.25rem 2rem")};
+  padding: ${(props) => (props.scrolled ? "0.75rem 1rem" : "1rem")};
   position: fixed;
   top: 0;
   left: 0;
@@ -19,7 +19,7 @@ const HeaderContainer = styled.header`
     props.scrolled
       ? "0 4px 20px rgba(0, 0, 0, 0.08)"
       : "0 2px 10px rgba(0, 0, 0, 0.02)"};
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
 
   &::before {
     content: "";
@@ -34,6 +34,10 @@ const HeaderContainer = styled.header`
       rgba(0, 0, 0, 0.05),
       transparent
     );
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpoints.tablet}) {
+    padding: ${(props) => (props.scrolled ? "0.75rem 2rem" : "1.25rem 2rem")};
   }
 `;
 
@@ -72,6 +76,16 @@ const Logo = styled(Link)`
       transform: rotate(45deg);
     }
   }
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    font-size: 1rem;
+    gap: 0.5rem;
+
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
 `;
 
 const NavLinks = styled.div`
@@ -82,28 +96,27 @@ const NavLinks = styled.div`
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     display: ${(props) => (props.isOpen ? "flex" : "none")};
     flex-direction: column;
-    position: fixed;
-    top: ${(props) => props.headerHeight}px;
-    left: 0;
-    right: 0;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(10px);
-    padding: 1.5rem;
-    gap: 0.75rem;
+    position: absolute;
+    top: calc(100% + 1rem);
+    left: 1rem;
+    right: 1rem;
+    background: white;
+    padding: 1rem;
+    gap: 0.5rem;
+    border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     transform-origin: top;
-    animation: ${(props) =>
-      props.isOpen ? "slideDown 0.3s ease-out forwards" : "none"};
+    animation: slideDown 0.3s ease-out forwards;
 
     @keyframes slideDown {
       from {
         opacity: 0;
-        transform: translateY(-8px) scale(0.98);
+        transform: translateY(-8px);
       }
       to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
       }
     }
   }
@@ -112,7 +125,7 @@ const NavLinks = styled.div`
 const NavLink = styled(Link)`
   color: ${(props) => props.theme.colors.text};
   text-decoration: none;
-  font-weight: 500;
+  font-weight: ${(props) => (props.active ? "600" : "500")};
   padding: 0.5rem 1rem;
   border-radius: 8px;
   transition: all 0.3s ease;
@@ -124,7 +137,6 @@ const NavLink = styled(Link)`
     `
     color: ${props.theme.colors.secondary};
     background: ${props.theme.colors.secondary}08;
-    font-weight: 600;
   `}
 
   @media (min-width: ${(props) => props.theme.breakpoints.tablet}) {
@@ -133,7 +145,7 @@ const NavLink = styled(Link)`
       position: absolute;
       bottom: 0;
       left: 50%;
-      width: 0;
+      width: ${(props) => (props.active ? "30px" : "0")};
       height: 2px;
       background: linear-gradient(
         90deg,
@@ -157,9 +169,11 @@ const NavLink = styled(Link)`
 
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     width: 100%;
-    padding: 0.875rem;
     text-align: center;
-    border: 1px solid transparent;
+    padding: 0.75rem;
+    border: 1px solid
+      ${(props) =>
+        props.active ? props.theme.colors.secondary + "20" : "transparent"};
 
     &:hover {
       background: ${(props) => `${props.theme.colors.secondary}08`};
@@ -177,7 +191,6 @@ const MobileMenuButton = styled.button`
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  position: relative;
   z-index: 2;
 
   &:hover {
@@ -211,7 +224,6 @@ const ActionButton = styled(Link)`
   font-weight: 500;
   text-decoration: none;
   transition: all 0.3s ease;
-  border: 2px solid transparent;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -233,25 +245,31 @@ const ActionButton = styled(Link)`
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     width: 100%;
     justify-content: center;
+    padding: 0.75rem 1.5rem;
   }
 `;
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [headerHeight, setHeaderHeight] = useState(0);
   const location = useLocation();
+  const navRef = React.useRef(null);
 
   useEffect(() => {
-    const header = document.querySelector("header");
-    setHeaderHeight(header?.offsetHeight || 0);
-
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleClickOutside = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   useEffect(() => {
@@ -262,19 +280,18 @@ function Header() {
 
   return (
     <HeaderContainer scrolled={scrolled}>
-      <Nav>
+      <Nav ref={navRef}>
         <Logo to="/">
           <Link2 size={50} />
           Supply Chain Consulting
         </Logo>
-        <NavLinks isOpen={isMenuOpen} headerHeight={headerHeight}>
+        <NavLinks isOpen={isMenuOpen}>
           <NavLink to="/services" active={isActive("/services")}>
             Services
           </NavLink>
           <NavLink to="/resources" active={isActive("/resources")}>
             Resources
           </NavLink>
-
           <NavLink to="/why-choose-us" active={isActive("/why-choose-us")}>
             Why Us
           </NavLink>
