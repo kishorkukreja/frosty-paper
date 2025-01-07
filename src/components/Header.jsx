@@ -21,21 +21,6 @@ const HeaderContainer = styled.header`
       : "0 2px 10px rgba(0, 0, 0, 0.02)"};
   transition: all 0.3s ease;
 
-  &::before {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(0, 0, 0, 0.05),
-      transparent
-    );
-  }
-
   @media (min-width: ${(props) => props.theme.breakpoints.tablet}) {
     padding: ${(props) => (props.scrolled ? "0.75rem 2rem" : "1.25rem 2rem")};
   }
@@ -60,31 +45,10 @@ const Logo = styled(Link)`
   gap: 0.75rem;
   padding: 0.5rem;
   border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 2;
-
-  svg {
-    transition: transform 0.3s ease;
-  }
-
-  &:hover {
-    color: ${(props) => props.theme.colors.secondary};
-    background-color: ${(props) => `${props.theme.colors.secondary}08`};
-
-    svg {
-      transform: rotate(45deg);
-    }
-  }
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     font-size: 1rem;
     gap: 0.5rem;
-
-    svg {
-      width: 40px;
-      height: 40px;
-    }
   }
 `;
 
@@ -97,22 +61,22 @@ const NavLinks = styled.div`
     display: ${(props) => (props.isOpen ? "flex" : "none")};
     flex-direction: column;
     position: absolute;
-    top: calc(100% + 1rem);
-    left: 1rem;
-    right: 1rem;
+    top: 100%;
+    left: 0;
+    right: 0;
     background: white;
     padding: 1rem;
-    gap: 0.5rem;
-    border-radius: 12px;
+    gap: 0.75rem;
+    border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    transform-origin: top;
+    overflow-y: auto;
+    max-height: 80vh;
     animation: slideDown 0.3s ease-out forwards;
 
     @keyframes slideDown {
       from {
         opacity: 0;
-        transform: translateY(-8px);
+        transform: translateY(-10px);
       }
       to {
         opacity: 1;
@@ -128,43 +92,10 @@ const NavLink = styled(Link)`
   font-weight: ${(props) => (props.active ? "600" : "500")};
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
   font-size: 0.95rem;
 
-  ${(props) =>
-    props.active &&
-    `
-    color: ${props.theme.colors.secondary};
-    background: ${props.theme.colors.secondary}08;
-  `}
-
-  @media (min-width: ${(props) => props.theme.breakpoints.tablet}) {
-    &:after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      width: ${(props) => (props.active ? "30px" : "0")};
-      height: 2px;
-      background: linear-gradient(
-        90deg,
-        ${(props) => props.theme.colors.secondary},
-        ${(props) => props.theme.colors.primary}
-      );
-      transition: all 0.3s ease;
-      transform: translateX(-50%);
-      border-radius: 2px;
-    }
-
-    &:hover {
-      color: ${(props) => props.theme.colors.secondary};
-      background: ${(props) => `${props.theme.colors.secondary}08`};
-
-      &:after {
-        width: 30px;
-      }
-    }
+  &:hover {
+    background: ${(props) => `${props.theme.colors.secondary}10`};
   }
 
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
@@ -173,12 +104,7 @@ const NavLink = styled(Link)`
     padding: 0.75rem;
     border: 1px solid
       ${(props) =>
-        props.active ? props.theme.colors.secondary + "20" : "transparent"};
-
-    &:hover {
-      background: ${(props) => `${props.theme.colors.secondary}08`};
-      border-color: ${(props) => `${props.theme.colors.secondary}20`};
-    }
+        props.active ? props.theme.colors.secondary : "transparent"};
   }
 `;
 
@@ -190,20 +116,6 @@ const MobileMenuButton = styled.button`
   padding: 0.5rem;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 2;
-
-  &:hover {
-    background: ${(props) => `${props.theme.colors.secondary}10`};
-  }
-
-  svg {
-    transition: transform 0.3s ease;
-  }
-
-  &:hover svg {
-    transform: scale(1.1);
-  }
 
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     display: flex;
@@ -223,28 +135,11 @@ const ActionButton = styled(Link)`
   border-radius: 50px;
   font-weight: 500;
   text-decoration: none;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   font-size: 0.95rem;
-
-  svg {
-    transition: transform 0.3s ease;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px ${(props) => `${props.theme.colors.secondary}40`};
-
-    svg {
-      transform: translateX(2px);
-    }
-  }
 
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     width: 100%;
-    justify-content: center;
+    text-align: center;
     padding: 0.75rem 1.5rem;
   }
 `;
@@ -253,23 +148,12 @@ function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-  const navRef = React.useRef(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
-    const handleClickOutside = (event) => {
-      if (navRef.current && !navRef.current.contains(event.target)) {
-        setIsMenuOpen(false);
-      }
-    };
-
     window.addEventListener("scroll", handleScroll);
-    document.addEventListener("mousedown", handleClickOutside);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -280,7 +164,7 @@ function Header() {
 
   return (
     <HeaderContainer scrolled={scrolled}>
-      <Nav ref={navRef}>
+      <Nav>
         <Logo to="/">
           <Link2 size={50} />
           Supply Chain Consulting
