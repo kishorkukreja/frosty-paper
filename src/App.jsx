@@ -31,6 +31,33 @@ const MainContent = styled.main`
   flex: 1;
 `;
 
+const Banner = styled.div`
+  background: linear-gradient(
+    135deg,
+    ${(props) => props.theme.colors.primary}0A,
+    ${(props) => props.theme.colors.secondary}0A
+  );
+  border: 1px solid ${(props) => `${props.theme.colors.secondary}15`};
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+`;
+
+const BannerContent = styled.div`
+  flex: 1;
+`;
+
 function App() {
   return (
     <ErrorBoundary>

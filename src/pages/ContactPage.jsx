@@ -273,18 +273,18 @@ function ContactPage() {
             <InfoList>
               <InfoItem>
                 <Phone />
-                <span>+1 (555) 123-4567</span>
+                <span>+44 7979255309</span>
               </InfoItem>
               <InfoItem>
                 <Mail />
-                <span>info@supplychainexperts.com</span>
+                <span>info@mahakaalconsulting.com</span>
               </InfoItem>
-              <InfoItem>
+              {/* <InfoItem>
                 <MapPin />
                 <span>
                   123 Supply Chain St, Business District, City, State 12345
                 </span>
-              </InfoItem>
+              </InfoItem> */}
             </InfoList>
           </div>
 

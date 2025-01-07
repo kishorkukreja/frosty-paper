@@ -340,6 +340,7 @@ function Footer() {
             Revolutionizing supply chains with data-driven solutions and
             AI-powered analytics for modern businesses.
           </CompanyDescription>
+
           <SocialIcons>
             <SocialIcon
               href="#"
@@ -410,19 +411,19 @@ function Footer() {
 
         <FooterSection>
           <FooterTitle>Contact Us</FooterTitle>
-          <ContactInfo>
+          {/* <ContactInfo>
             <MapPin size={18} />
             <span>
               123 Supply Chain St, Business District, City, State 12345
             </span>
-          </ContactInfo>
+          </ContactInfo> */}
           <ContactInfo>
             <Phone size={18} />
-            <span>+1 (555) 123-4567</span>
+            <span>+44 7979255309</span>
           </ContactInfo>
           <ContactInfo>
             <Mail size={18} />
-            <span>info@supplychainconsulting.com</span>
+            <span>info@mahakaalconsulting.com</span>
           </ContactInfo>
         </FooterSection>
       </FooterContent>
