@@ -267,6 +267,17 @@ const ResourcesPage = () => {
       category: "Risk Management",
       downloads: "1.2k",
     },
+    {
+      id: 5,
+      title: "Advanced Framework for Deep Research and Analysis",
+      description:
+        "Comprehensive guide for conducting deep Researech using perplecity & NotebookLM",
+      type: "framework",
+      icon: Shield,
+      fileSize: "0.2 MB",
+      category: "Research Framework",
+      downloads: "50+",
+    },
   ];
 
   const getResourcePath = (resourceId) => {
@@ -292,6 +303,10 @@ const ResourcesPage = () => {
       4: {
         bucket: "sc_respurces",
         path: "frameworks/risk_assessment.pdf",
+      },
+      5: {
+        bucket: "sc_respurces",
+        path: "Frameworks/Deep_Research.pdf",
       },
     };
 
